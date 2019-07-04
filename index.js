@@ -1,4 +1,25 @@
 var THREE = require( 'three' );
+if(global) {
+	var { Blob, FileReader } = require('vblob');
+	var Canvas = require('canvas');
+	global.window = global;
+	global.Blob = Blob;
+	global.FileReader = FileReader;
+	global.document = {
+	  createElement: (nodeName) => {
+		if (nodeName !== 'canvas') throw new Error(`Cannot create node ${nodeName}`);
+		const canvas = new Canvas(256, 256);
+		// This isn't working — currently need to avoid toBlob(), so export to embedded .gltf not .glb.
+		// canvas.toBlob = function () {
+		//   return new Blob([this.toBuffer()]);
+		// };
+		return canvas;
+	  }
+	};
+}
+
+// Patch global scope to imitate browser environment.
+
 /**
  * @author fernandojsg / http://fernandojsg.com
  * @author Don McCurdy / https://www.donmccurdy.com
